@@ -100,17 +100,17 @@ export async function handler(chatUpdate) {
                 if (!('antiDiscord' in chat)) 
                     chat.antiDiscord = false
                 if (!('antiver' in chat))
-                    chat.antiver = false
+                    chat.antiver = true
                 if (!('modoadmin' in chat))
                     chat.modoadmin = false
                 if (!('antitoxic' in chat))
                     chat.antitoxic = false
                 if (!('antispam' in chat))
-                    chat.antispam = false
+                    chat.antispam = true
                 if (!('onlyLatinos' in chat))
-                    chat.onlyLatinos = false
+                    chat.onlyLatinos = true
                 if (!('nsfw' in chat))
-                    chat.nsfw = false
+                    chat.nsfw = true
                 if (!isNumber(chat.expired))
                     chat.expired = 0
             } else
@@ -129,8 +129,8 @@ export async function handler(chatUpdate) {
                     modoadmin: false,
                     antitoxic: false,
                     antispam: false,
-                    onlyLatinos: false,
-                    nsfw: false, 
+                    onlyLatinos: true,
+                    nsfw: true, 
                     expired: 0, 
                 }
             var settings = global.db.data.settings[this.user.jid]
