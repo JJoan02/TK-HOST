@@ -1,0 +1,35 @@
+let handler = async (m, { conn }) => {
+  const imageUrl = 'https://pomf2.lain.la/f/9a79fsqu.jpg'; // URL de la imagen
+  const prebotsList = `
+🌟 *Lista de Prebots Disponibles* 🌟
+
+1. KatashiBot-MD (TK-Oficial)
+2. Admin-TK (TK-Oficial)
+3. GenesisBot-MD (auspiciado)
+4. Megumin-MD
+5. Waguri-Ai
+6. Ai-hoshino
+7. CrowBot-Ai
+8. Kakaroto-Bot-MD
+9. Yuki_Suou-Bot
+`.trim();
+
+  const text = `
+🌐 *Prebots Disponibles en TK-Host* 🖥️
+
+Aquí tienes la lista completa de los prebots que puedes utilizar:
+
+${prebotsList}
+
+🔗 *Crea tu servidor con tu prebot favorito aquí:*
+> (https://dash.tk-joanhost.com/servers/create)
+
+¡Selecciona tu prebot favorito y comienza a configurarlo ahora mismo!
+  `.trim();
+
+  await conn.sendFile(m.chat, imageUrl, 'prebots-list.jpg', text, m);
+};
+handler.command = ['prebots']; // Comando .prebots
+handler.tags = ['info']; // Categoría del comando
+handler.help = ['prebots']; // Ayuda del comando
+export default handler;
