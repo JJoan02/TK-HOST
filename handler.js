@@ -42,7 +42,6 @@ export async function handler(chatUpdate) {
                     user.premium = false
                 if (!user.premium) 
                     user.premiumTime = 0
-                // Eliminar dependencia de 'registered'
                 if (!('name' in user))
                     user.name = m.name
                 if (!isNumber(user.age))
@@ -84,7 +83,7 @@ export async function handler(chatUpdate) {
                 if (!('bienvenida' in chat))
                     chat.bienvenida = true 
                 if (!('antiLink' in chat))
-                    chat.antiLink = false
+                    chat.antiLink = true
                 if (!('antiTiktok' in chat))                             
                     chat.antiTiktok = false
                 if (!('antiYoutube' in chat)) 
@@ -98,26 +97,26 @@ export async function handler(chatUpdate) {
                 if (!('antiTwitter' in chat)) 
                     chat.antiTwitter = false
                 if (!('antiDiscord' in chat)) 
-                    chat.antiDiscord = false
+                    chat.antiDiscord = true
                 if (!('antiver' in chat))
-                    chat.antiver = false
+                    chat.antiver = true
                 if (!('modoadmin' in chat))
                     chat.modoadmin = false
                 if (!('antitoxic' in chat))
                     chat.antitoxic = false
                 if (!('antispam' in chat))
-                    chat.antispam = false
+                    chat.antispam = true
                 if (!('onlyLatinos' in chat))
-                    chat.onlyLatinos = false
+                    chat.onlyLatinos = true
                 if (!('nsfw' in chat))
-                    chat.nsfw = false
+                    chat.nsfw = true
                 if (!isNumber(chat.expired))
                     chat.expired = 0
             } else
                 global.db.data.chats[m.chat] = {
                     isBanned: false,
                     bienvenida: true,
-                    antiLink: false,
+                    antiLink: true,
                     antiTiktok: false,
                     antiYoutube: false,
                     antiTelegram: false,
@@ -128,19 +127,22 @@ export async function handler(chatUpdate) {
                     antiver: true,
                     modoadmin: false,
                     antitoxic: false,
-                    antispam: false,
-                    onlyLatinos: false,
-                    nsfw: false, 
+                    antispam: true,
+                    onlyLatinos: true,
+                    nsfw: true, 
                     expired: 0, 
                 }
+
             var settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
             if (settings) {
                 if (!('self' in settings)) settings.self = false
                 if (!('autoread' in settings)) settings.autoread = false
+                if (!('restrict' in settings)) settings.restrict = false
             } else global.db.data.settings[this.user.jid] = {
                 self: false,
                 autoread: false,
+                restrict: false,
                 status: 0
             }
         } catch (e) {
@@ -201,11 +203,11 @@ export async function handler(chatUpdate) {
                     console.error(e)
                 }
             }
-            if (!opts['restrict'])
-                if (plugin.tags && plugin.tags.includes('admin')) {
-                    continue
-                }
-            const str2Regex = str => str.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+            if (!opts['restrict'] && plugin.tags && plugin.tags.includes('admin')) {
+                conn.reply(m.chat, global.dfail('restrict', m, this), m)
+                continue
+            }
+            const str2Regex = str => str.replace(/[|\{}()[\]^$+*?.]/g, '\$&')
             let _prefix = plugin.customPrefix ? plugin.customPrefix : conn.prefix ? conn.prefix : global.prefix
             let match = (_prefix instanceof RegExp ? 
                 [[_prefix.exec(m.text), _prefix]] :
@@ -431,23 +433,23 @@ const rcanal = {
 
 global.dfail = (type, m, conn) => {
     let msg = {
-        rowner: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR MI CREADOR!!```", 
-        owner: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR MI DESARROLLADOR!!```", 
-        mods: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR MIS DESARROLLADORES!!```", 
-        premium: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO ES PARA USUARIOS PREMIUM!!```", 
-        group: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCION SOLO PUEDE SER EJECUTADA EN GRUPOS!!```", 
-        private: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA EN CHAT PRIVADO!!```", 
-        admin: "```:⁖֟⊱┈֟፝❥ ¡¡ESTE COMANDO SOLO PUEDE SER USADO POR ADMINS!!```", 
-        botAdmin: "```:⁖֟⊱┈֟፝❥ ¡¡PARA USAR ESTA FUNCIÓN DEBO SER ADMIN DEL GRUPO!!```", 
-        unreg: "```:⁖֟⊱┈֟፝❥ ¡¡NECESITAS ESTAR REGISTRADO(A) PARA USAR ESTE COMANDO, ESCRIBE #reg PARA REGISTRARTE!!```",
-        restrict: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA CARACTERÍSTICA ESTA DESACTIVADA!!```"
+        rowner: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR EL CREADOR!!```", 
+        owner: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR EL DESARROLLADOR!!```", 
+        mods: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR LOS MODERADORES!!```", 
+        premium: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN ES SOLO PARA USUARIOS PREMIUM!!```", 
+        group: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO SE PUEDE USAR EN GRUPOS!!```", 
+        private: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO SE PUEDE USAR EN CHATS PRIVADOS!!```", 
+        admin: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN SOLO PUEDE SER USADA POR ADMINISTRADORES!!```", 
+        botAdmin: "```:⁖֟⊱┈֟፝❥ ¡¡EL BOT DEBE SER ADMINISTRADOR PARA USAR ESTA FUNCIÓN!!```", 
+        unreg: "```:⁖֟⊱┈֟፝❥ ¡¡NECESITAS ESTAR REGISTRADO PARA USAR ESTA FUNCIÓN!!```", 
+        restrict: "```:⁖֟⊱┈֟፝❥ ¡¡ESTA FUNCIÓN ESTÁ DESACTIVADA!!```"
     }[type];
-    if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️')); // Ahora `rcanal` está definido
+    if (msg) return conn.reply(m.chat, msg, m, rcanal).then(_ => m.react('✖️'));
 };
 
-let file = global.__filename(import.meta.url, true)
+let file = global.__filename(import.meta.url, true);
 watchFile(file, async () => {
-    unwatchFile(file)
-    console.log(chalk.magenta("Se actualizo 'handler.js'"))
-    if (global.reloadHandler) console.log(await global.reloadHandler())
+    unwatchFile(file);
+    console.log(chalk.magenta("Se actualizó 'handler.js'"));
+    if (global.reloadHandler) console.log(await global.reloadHandler());
 })
