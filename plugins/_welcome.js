@@ -13,7 +13,7 @@ export async function before(m, { conn, participants, groupMetadata }) {
     let chat = global.db.data.chats[m.chat];
     
     if (chat.bienvenida) {
-      let welcome = `*✦━── ──━✦ \`ʙɪᴇɴᴠᴇɴɪᴅᴀ\` ✦━── ──━✦*\n\n╭── • ✧ • ✧ • ✧ • ✧ • ✧ •\n│ ✦ ᴡᴇʟᴄᴏᴍᴇ: @${m.messageStubParameters[0].split`@`[0]}\n│ ✦ ɢʀᴜᴘᴏ: *${groupMetadata.subject}*    \n╰── • ✧ • ✧ • ✧ • ✧ • ✧ •\n\n> Lee la descripción del grupo`;
+      let welcome = `*✦━── ──━✦ \`ʙɪᴇɴᴠᴇɴɪᴅᴀ\` ✦━── ──━✦*\n\n╭── • ✧ • ✧ • ✧ • ✧ • ✧ •\n│ ✦ ᴡᴇʟᴄᴏᴍᴇ: @${m.messageStubParameters[0].split`@`[0]}\n│ ✦ ɢʀᴜᴘᴏ: *${groupMetadata.subject}*    \n╰── • ✧ • ✧ • ✧ • ✧ • ✧ •\n\n> Lee la descripción del grupo\n> ¿Quieres comprar un servidor?`;
       await conn.sendAi(m.chat, titulowm2, titu, welcome, img, img, canal, estilo);
     }
   }
