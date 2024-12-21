@@ -10,7 +10,7 @@ import axios from 'axios'
 
 global.owner = [
   ['51910234457', 'Joan', true],
-  ['51910234457', 'TK-HOST', true],
+  ['59168683798', 'Angel-Dev', true],
   [''],
   [''],
   [''],
