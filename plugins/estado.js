@@ -230,7 +230,7 @@ ${randomResponse}
 `.trim();
 
   // Enviar el mensaje con la imagen y el texto
-await conn.sendFile(m.chat, botname, textbot, text, randomImageUrl, estado.jpg, canal, m);
+await conn.sendFile(m.chat, botname, textbot, text, randomImageUrl, imagen2, canal, m);
 };
 
 // Comandos para este handler
