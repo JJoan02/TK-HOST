@@ -22,6 +22,30 @@ let handler = async (m, { conn }) => {
   const randomCanal = canales[Math.floor(Math.random() * canales.length)];
 
   // Opciones de rcanal
+const rcanal = [
+    {
+      contextInfo: {
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: "120363314192605628@newsletter",
+          serverMessageId: 100,
+          newsletterName: 'Tk-Host Channel',
+        },
+        externalAdReply: {
+          showAdAttribution: true,
+          title: packname,
+          body: 'JohanTk-Bot',
+          mediaUrl: null,
+          description: null,
+          previewType: "PHOTO",
+          thumbnailUrl: icono,
+          sourceUrl: redes,
+          mediaType: 1,
+          renderLargerThumbnail: false
+        }
+      }
+    },
+
   const rcanales = [
     {
       contextInfo: {
@@ -230,7 +254,7 @@ ${randomResponse}
 `.trim();
 
   // Enviar el mensaje con la imagen y el texto
-await conn.sendAi(m.chat, botname, textbot, text, randomImageUrl, imagen2, canal, m);
+await conn.sendFile(m.chat, randomImageUrl, 'estado.jpg', text, m, rcanal);
 };
 
 // Comandos para este handler
