@@ -10,10 +10,10 @@ let imagenes = ["https://i.ibb.co/f9kvM3S/file.jpg",
 let icono = imagenes[Math.floor(Math.random() * imagenes.length)]
 
 //Enlaces
-var canal =   'https://whatsapp.com/channel/0029Vakpp8h1Hsq5Y5kbF33t'
+var canal =   'https://whatsapp.com/channel/0029VaS4zeE72WTyg5et571r'
 var git = 'https://github.com/JJoan02'  
 var github = 'https://github.com/JJoan02/TK-HOST'  
-let tiktok = 'https://tiktok.com/@the_crow_legendario_bs'
+let tiktok = 'https://www.tiktok.com/@joan_tk02'
 let correo = 'sm.ninopina10@gmail.com'
 
 global.redes = [canal, git, github, tiktok, correo].getRandom()
