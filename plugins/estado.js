@@ -152,10 +152,9 @@ let handler = async (m, { conn }) => {
     "🔒 Máxima protección para tus datos.",
     "🌟 TK-HOST, siempre un paso adelante.",
   ];
-
   const randomResponse = responses[Math.floor(Math.random() * responses.length)];
 
-  // Texto y envío con rcanal
+  // Formato del texto
   const text = `
 ✦━── ──━✦ E-S-T-A-D-O ✦━── ──━✦
 
@@ -166,18 +165,31 @@ ${randomResponse}
 > https://dash.tk-joanhost.com/home
 `.trim();
 
+  // Opciones de rcanal
   const rcanal = {
     contextInfo: {
       isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: "120363314192605628@newsletter",
+        serverMessageId: 100,
+        newsletterName: 'Tk-Host Channel',
+      },
       externalAdReply: {
+        showAdAttribution: true,
         title: 'Estado del Servicio',
         body: 'TK-HOST | Tu aliado digital',
-        thumbnailUrl: randomImageUrl,
+        mediaUrl: null,
+        description: null,
+        previewType: "PHOTO",
+        thumbnailUrl: randomImageUrl, // Imagen seleccionada aleatoriamente
         sourceUrl: 'https://dash.tk-joanhost.com/home',
+        mediaType: 1,
+        renderLargerThumbnail: true,
       },
     },
   };
 
+  // Enviar el mensaje con rcanal
   await conn.sendMessage(m.chat, { text, ...rcanal }, { quoted: m });
 };
 
