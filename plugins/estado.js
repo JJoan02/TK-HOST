@@ -21,6 +21,56 @@ let handler = async (m, { conn }) => {
   // Selección de canal al azar
   const randomCanal = canales[Math.floor(Math.random() * canales.length)];
 
+  // Opciones de rcanal
+  const rcanales = [
+    {
+      contextInfo: {
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: "120363314192605628@newsletter",
+          serverMessageId: 100,
+          newsletterName: 'Tk-Host Channel',
+        },
+        externalAdReply: {
+          showAdAttribution: true,
+          title: packname,
+          body: 'JohanTk-Bot',
+          mediaUrl: null,
+          description: null,
+          previewType: "PHOTO",
+          thumbnailUrl: icono,
+          sourceUrl: redes,
+          mediaType: 1,
+          renderLargerThumbnail: false
+        }
+      }
+    },
+    {
+      contextInfo: {
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: "120363233459118973@newsletter",
+          serverMessageId: 100,
+          newsletterName: 'Memes TK Channel',
+        },
+        externalAdReply: {
+          showAdAttribution: true,
+          title: packname,
+          body: 'JohanTk-Bot',
+          mediaUrl: null,
+          description: null,
+          previewType: "PHOTO",
+          thumbnailUrl: icono,
+          sourceUrl: redes,
+          mediaType: 1,
+          renderLargerThumbnail: false
+        }
+      }
+    }
+  ];
+  // Selección de rcanal al azar
+  const randomRCanal = rcanales[Math.floor(Math.random() * rcanales.length)];
+
   // 200 frases únicas sobre TK-HOST y servicios relacionados
   const responses = [
     "💻 TK-HOST: Tu servicio de hosting confiable y eficiente.",
@@ -180,7 +230,7 @@ ${randomResponse}
 `.trim();
 
   // Enviar el mensaje con la imagen y el texto
-  await conn.sendFile(m.chat, randomImageUrl, 'estado.jpg', text, m, rcanal);
+  await conn.sendFile(m.chat, randomImageUrl, 'estado.jpg', text, m, randomRCanal);
 };
 
 // Comandos para este handler
@@ -189,4 +239,3 @@ handler.tags = ['estado'];
 handler.help = ['estado', 's'];
 
 export default handler;
-
