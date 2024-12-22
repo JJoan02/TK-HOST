@@ -1,85 +1,71 @@
-import fetch from 'node-fetch'  
-const isLinkTik = /tiktok.com/i 
-//const isLinkYt = /youtube.com|youtu.be/i 
-const isLinkYt = /youtube.com|youtu.be|m.youtube.com/i 
-const isLinkTel = /telegram.com/i 
-const isLinkFb = /facebook.com|fb.me/i 
-const isLinkIg = /instagram.com/i 
-const isLinkTw = /twitter.com/i 
-  
-let handler = m => m
-handler.before = async function (m, { conn, args, usedPrefix, command, isAdmin, isBotAdmin }) {
-if (m.isBaileys && m.fromMe)
-return !0
-if (!m.isGroup) return !1
-let chat = global.db.data.chats[m.chat]
-let bot = global.db.data.settings[this.user.jid] || {}
-let delet = m.key.participant
-let bang = m.key.id
-let toUser = `${m.sender.split("@")[0]}`
-let aa = toUser + '@s.whatsapp.net'
-    
-const isAntiLinkTik = isLinkTik.exec(m.text)
-const isAntiLinkYt = isLinkYt.exec(m.text)
-const isAntiLinkTel = isLinkTel.exec(m.text)
-const isAntiLinkFb = isLinkFb.exec(m.text)
-const isAntiLinkIg = isLinkIg.exec(m.text)
-const isAntiLinkTw = isLinkTw.exec(m.text)
- 
-if (chat.antiTiktok && isAntiLinkTik) {  
-if (isBotAdmin) {
-await conn.reply(m.chat, `『✦』Se detecto un enlace de \`TikTok\`.\nSerás eliminado/a: *@${toUser}*`, null, { mentions: [aa] })
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
-await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-} else {
-return m.reply(`『✦』El bot no es admin, no puedo eliminar personas.`)
-}}
+import fetch from 'node-fetch';
 
-if (chat.antiYoutube && isAntiLinkYt) {
-if (isBotAdmin) {
-await conn.reply(m.chat, `『✦』Se detecto un enlace de \`YouTube\`.\nSerás eliminado/a: *@${toUser}*`, null, { mentions: [aa] })
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
-await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-} else {
-return m.reply(`『✦』El bot no es admin, no puedo eliminar personas.`)
-}}
+const isLink = /(https?:\/\/[^\s]+)/i; // Expresión regular para detectar enlaces
 
-if (chat.antiTelegram && isAntiLinkTel) {
-if (isBotAdmin) {
-await conn.reply(m.chat, `『✦』Se detecto un enlace de \`Telegram\`.\nSerás eliminado/a: *@${toUser}*`, null, { mentions: [aa] })
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
-await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-} else {
-return m.reply(`『✦』El bot no es admin, no puedo eliminar personas.`)
-}}
+let handler = m => m;
 
-if (chat.antiFacebook && isAntiLinkFb) {
-if (isBotAdmin) {
-await conn.reply(m.chat, `『✦』Se detecto un enlace de \`Facebook\`.\nSerás eliminado/a: *@${toUser}*`, null, { mentions: [aa] })
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
-await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-} else {
-return m.reply(`『✦』El bot no es admin, no puedo eliminar personas.`)
-}}
+handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner }) {
+  if (!m.isGroup) return false; // Solo aplica en grupos
+  if (m.isBaileys && m.fromMe) return true; // Ignorar mensajes enviados por el bot
 
-if (chat.antiInstagram && isAntiLinkIg) {
-if (isBotAdmin) {
-await conn.reply(m.chat, `『✦』Se detecto un enlace de \`Instagram\`.\nSerás eliminado/a: *@${toUser}*`, null, { mentions: [aa] })
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
-await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-} else {
-return m.reply(`『✦』El bot no es admin, no puedo eliminar personas.`)
-}}
+  const chat = global.db.data.chats[m.chat];
+  const botNumber = this.user.jid; // Número del bot
+  const senderNumber = m.sender.split('@')[0];
+  const userKey = `${m.chat}-${m.sender}`;
 
-if (chat.antiTwitter && isAntiLinkTw) {
-if (isBotAdmin) {
-await conn.reply(m.chat, `『✦』Se detecto un enlace de \`Twitter\`.\nSerás eliminado/a: *@${toUser}*`, null, { mentions: [aa] })
-await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
-await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-} else {
-return m.reply(`『✦』El bot no es admin, no puedo eliminar personas.`)
-}}
+  // Sistema de advertencias por usuario en cada grupo
+  if (!global.db.data.warns) global.db.data.warns = {};
+  if (!global.db.data.warns[userKey]) global.db.data.warns[userKey] = { count: 0, lastWarning: 0 };
 
-return !0
-}
-export default handler
+  const userWarnings = global.db.data.warns[userKey];
+  const now = Date.now();
+
+  // Ignorar si el remitente es administrador, owner o el bot
+  if (isAdmin || isOwner || m.sender === botNumber) return true;
+
+  // Verificar si el mensaje contiene un enlace
+  if (isLink.exec(m.text)) {
+    if (!chat.antiLinks) return true; // Ignorar si el sistema anti-enlaces está desactivado
+
+    // Incrementar el contador de advertencias
+    userWarnings.count += 1;
+    userWarnings.lastWarning = now;
+
+    // Eliminar el mensaje del grupo
+    await conn.sendMessage(m.chat, { delete: m.key });
+
+    // Manejo de advertencias según la cantidad acumulada
+    if (userWarnings.count === 1) {
+      // Primera advertencia en privado
+      await conn.reply(
+        m.sender,
+        `⚠️ **Primera Advertencia:** No está permitido enviar enlaces en este grupo. Si reincides, habrá consecuencias.`,
+        null
+      );
+    } else if (userWarnings.count === 2) {
+      // Segunda advertencia en privado
+      await conn.reply(
+        m.sender,
+        `⚠️ **Segunda Advertencia:** Estás reincidiendo en enviar enlaces. Una más y serás eliminado del grupo.`,
+        null
+      );
+    } else if (userWarnings.count >= 3) {
+      // Tercera advertencia: expulsar usuario y notificar en privado
+      await conn.reply(
+        m.sender,
+        `❌ **Expulsado:** Has sido eliminado del grupo por enviar enlaces en tres ocasiones.`,
+        null
+      );
+      await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
+
+      // Reiniciar el contador de advertencias tras la expulsión
+      delete global.db.data.warns[userKey];
+    }
+    return false; // Detener el procesamiento del mensaje
+  }
+
+  return true;
+};
+
+export default handler;
+
