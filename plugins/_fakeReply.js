@@ -18,6 +18,9 @@ let correo = 'sm.joanbottk@gmail.com'
 
 global.redes = [canal, git, github, tiktok, correo].getRandom()
 
+//id canales
+global.canalIdM = ["120363205895430548@newsletter", "120363343811229130@newsletter", "120363314192605628@newsletter"]
+
 global.rcanal = {
  contextInfo: {
              isForwarded: true,
