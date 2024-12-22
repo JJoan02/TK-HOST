@@ -1,115 +1,74 @@
-const userSpamData = {}
-let handler = m => m
-handler.before = async function (m, {conn, isAdmin, isBotAdmin, isOwner, isROwner, isPrems}) {
-const chat = global.db.data.chats[m.chat]
-const bot = global.db.data.settings[conn.user.jid] || {}
-if (!bot.antiSpam) return
-if (m.isGroup && chat.modoadmin) return  
-if (m.isGroup) {
-if (isOwner || isROwner || isAdmin || !isBotAdmin || isPrems) return
-}  
-let user = global.db.data.users[m.sender]
-const sender = m.sender
-const currentTime = new Date().getTime()
-const timeWindow = 5000 // tiempo límite 
-const messageLimit = 10 // cantidad de mensajes en dicho tiempo
+const userSpamData = {};
+let handler = m => m;
 
-let time, time2, time3, mensaje, motive
-time = 30000 // 30 seg
-time2 = 60000 // 1 min
-time3 = 120000 // 2 min 
+handler.before = async function (m, { conn, isAdmin, isBotAdmin, isOwner, isROwner, isPrems }) {
+  const chat = global.db.data.chats[m.chat];
+  const bot = global.db.data.settings[conn.user.jid] || {};
 
-if (!(sender in userSpamData)) {
-userSpamData[sender] = {
-lastMessageTime: currentTime,
-messageCount: 1, 
-antiBan: 0, 
-message: 0,
-message2: 0,
-message3: 0,
-}
-} else {
-const userData = userSpamData[sender]
-const timeDifference = currentTime - userData.lastMessageTime
+  if (!bot.antiSpam) return;
+  if (m.isGroup && chat.modoadmin) return;
 
-if (userData.antiBan === 1) {
-if (userData.message < 1) {
-userData.message++  
-motive = `᥀·࣭࣪̇˖⚔️◗ 𝙉𝙤 𝙝𝙖𝙜𝙖𝙨 𝙨𝙥𝙖𝙢.`
-await conn.reply(m.chat, motive, m, { mentions: [m.sender] })  
-user.messageSpam = motive
-}} else if (userData.antiBan === 2) {
-if (userData.message2 < 1) {
-userData.message2++  
-motive =  `᥀·࣭࣪̇˖⚔️◗ 𝙉𝙤 𝙝𝙖𝙜𝙖𝙨 𝙨𝙥𝙖𝙢...`
-await conn.reply(m.chat, motive, m, { mentions: [m.sender] })  
-user.messageSpam = motive
-}} else if (userData.antiBan === 3) {
-if (userData.message3 < 1) {
-userData.message3++  
-motive = `᥀·࣭࣪̇˖👺◗ 𝙎𝙚𝙧𝙖𝙨 𝙚𝙡𝙞𝙢𝙞𝙣𝙖𝙙𝙤(𝙖) 𝙥𝙤𝙧 𝙝𝙖𝙘𝙚𝙧 𝙨𝙥𝙖𝙢.`
-await conn.reply(m.chat, motive, m, { mentions: [m.sender] }) 
-user.messageSpam = motive
-await conn.groupParticipantsUpdate(m.chat, [sender], 'remove')
-}}
+  const sender = m.sender;
+  const currentTime = Date.now();
+  const timeWindow = 5000; // Tiempo límite (5 segundos)
+  const messageLimit = 10; // Límite de mensajes en el tiempo establecido
 
-if (timeDifference <= timeWindow) {
-userData.messageCount += 1
+  // Ignorar si el remitente es administrador, owner o el mismo bot
+  if (isOwner || isROwner || isAdmin || !isBotAdmin || isPrems || m.sender === conn.user.jid) return;
 
-if (userData.messageCount >= messageLimit) {
-const mention = `@${sender.split("@")[0]}`
-const warningMessage = `🚩 _*Mucho Spam*_\n\n𝙐𝙨𝙪𝙖𝙧𝙞𝙤: ${mention}`
-if (userData.antiBan > 2) return
-await conn.reply(m.chat, warningMessage, m, { mentions: [m.sender] })  
-user.banned = true
-userData.antiBan++
-userData.messageCount = 1
+  const timeouts = [30000, 60000, 120000]; // 30s, 1min, 2min
+  const warnings = [
+    { message: "᥀·࣭࣪̇˖⚔️◗ No hagas spam.", level: 1 },
+    { message: "᥀·࣭࣪̇˖⚔️◗ No hagas spam...", level: 2 },
+    { message: "᥀·࣭࣪̇˖👺◗ Serás eliminado(a) por hacer spam.", level: 3 }
+  ];
 
-if (userData.antiBan === 1) {
-setTimeout(() => {
-if (userData.antiBan === 1) {
-userData.antiBan = 0
-userData.message = 0
-userData.message2 = 0
-userData.message3 = 0
-user.antispam = 0
-motive = 0
-user.messageSpam = 0
-user.banned = false
-}}, time) 
+  if (!(sender in userSpamData)) {
+    userSpamData[sender] = {
+      lastMessageTime: currentTime,
+      messageCount: 1,
+      antiBanLevel: 0,
+      warningTimers: { first: false, second: false, third: false }
+    };
+  } else {
+    const userData = userSpamData[sender];
+    const timeDifference = currentTime - userData.lastMessageTime;
 
-} else if (userData.antiBan === 2) {
-setTimeout(() => {
-if (userData.antiBan === 2) {
-userData.antiBan = 0
-userData.message = 0
-userData.message2 = 0
-userData.message3 = 0
-user.antispam = 0
-motive = 0
-user.messageSpam = 0
-user.banned = false
-}}, time2) 
+    if (timeDifference <= timeWindow) {
+      userData.messageCount += 1;
 
-} else if (userData.antiBan === 3) {
-setTimeout(() => {
-if (userData.antiBan === 3) {
-userData.antiBan = 0
-userData.message = 0
-userData.message2 = 0
-userData.message3 = 0
-user.antispam = 0
-motive = 0
-user.messageSpam = 0
-user.banned = false
-}}, time3)
+      if (userData.messageCount >= messageLimit) {
+        userData.antiBanLevel += 1;
+        userData.messageCount = 0;
+        const level = userData.antiBanLevel;
 
-}}
-} else {
-if (timeDifference >= 2000) {
-userData.messageCount = 1
-}}
-userData.lastMessageTime = currentTime
-}}
+        if (level < 3) {
+          const warning = warnings[level - 1];
+          if (!userData.warningTimers[`level${warning.level}`]) {
+            userData.warningTimers[`level${warning.level}`] = true;
+            await conn.reply(sender, warning.message, null, { mentions: [sender] }); // Enviar advertencia al privado
 
-export default handler
+            setTimeout(() => {
+              if (userSpamData[sender]?.antiBanLevel === level) {
+                userSpamData[sender].antiBanLevel = 0;
+                userData.warningTimers[`level${warning.level}`] = false;
+              }
+            }, timeouts[level - 1]);
+          }
+        } else {
+          await conn.reply(sender, warnings[2].message, null, { mentions: [sender] }); // Notificación al privado
+          await conn.groupParticipantsUpdate(m.chat, [sender], 'remove');
+          delete userSpamData[sender];
+        }
+      }
+    } else {
+      if (timeDifference >= 2000) {
+        userData.messageCount = 1;
+      }
+    }
+
+    userData.lastMessageTime = currentTime;
+  }
+};
+
+export default handler;
