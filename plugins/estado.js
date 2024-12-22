@@ -170,7 +170,7 @@ ${randomResponse}
     contextInfo: {
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363233459118973@newsletter",
+        newsletterJid: canalIdM,
         serverMessageId: 100,
         newsletterName: 'Tk-Host Channel',
       },
