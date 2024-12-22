@@ -12,12 +12,11 @@ let icono = imagenes[Math.floor(Math.random() * imagenes.length)]
 //Enlaces
 var canal =   'https://whatsapp.com/channel/0029Vakpp8h1Hsq5Y5kbF33t'
 var git = 'https://github.com/JJoan02'  
-var github = 'https://github.com/JJoan02/TK-HOST' 
-var facebook = 'https://www.facebook.com/profile.php?id=100055985748040' 
+var github = 'https://github.com/JJoan02/TK-HOST'  
 let tiktok = 'https://tiktok.com/@the_crow_legendario_bs'
 let correo = 'sm.ninopina10@gmail.com'
 
-global.redes = [canal, git, github, facebook, tiktok, correo].getRandom()
+global.redes = [canal, git, github, tiktok, correo].getRandom()
 
 global.rcanal = {
  contextInfo: {
