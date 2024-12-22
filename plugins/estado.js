@@ -3,7 +3,12 @@ import fs from 'fs';
 
 let handler = async (m, { conn }) => {
   // URLs de imágenes
-  const imageUrls = [
+ const canalId = [
+"120363205895430548@newsletter", "120363233459118973@newsletter"
+];
+const randomCanalId = canalId[Math.floor(Math.random() * canalId.length)];
+
+ const imageUrls = [
     'https://pomf2.lain.la/f/heo0hfu6.jpg',
     'https://pomf2.lain.la/f/9yxhgs9j.jpg',
     'https://pomf2.lain.la/f/nqwlpdur.jpg',
@@ -165,19 +170,19 @@ ${randomResponse}
 > https://dash.tk-joanhost.com/home
 `.trim();
 
-  // Primer rcanal
-  const rcanal1 = {
+  // Opciones de rcanal
+  const rcanal = {
     contextInfo: {
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363233459118973@newsletter",
+        newsletterJid: randomCanalId,
         serverMessageId: 100,
         newsletterName: 'Tk-Host Channel',
       },
       externalAdReply: {
         showAdAttribution: true,
         title: 'Estado del Servicio',
-        body: 'Memes TK | Canal personal de Joan TK',
+        body: 'TK-HOST | Tu aliado digital',
         mediaUrl: null,
         description: null,
         previewType: "PHOTO",
@@ -189,36 +194,8 @@ ${randomResponse}
     },
   };
 
-  // Segundo rcanal
-  const rcanal2 = {
-    contextInfo: {
-      isForwarded: true,
-      forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363205895430548@newsletter",
-        serverMessageId: 200,
-        newsletterName: 'Otro Canal',
-      },
-      externalAdReply: {
-        showAdAttribution: true,
-        title: 'Estado del Servicio',
-        body: 'TK-HOST | Tu socio confiable',
-        mediaUrl: null,
-        description: 'Descubre más sobre TK-HOST',
-        previewType: "VIDEO",
-        thumbnailUrl: randomImageUrl, // Imagen seleccionada aleatoriamente
-        sourceUrl: 'https://dash.tk-joanhost.com/home',
-        mediaType: 2,
-        renderLargerThumbnail: true,
-      },
-    },
-  };
-
-  // Selección aleatoria de rcanal
-  const rcanals = [rcanal1, rcanal2];
-  const randomRCanal = rcanals[Math.floor(Math.random() * rcanals.length)];
-
-  // Enviar el mensaje con rcanal aleatorio
-  await conn.sendMessage(m.chat, { text, ...randomRCanal }, { quoted: m });
+  // Enviar el mensaje con rcanal
+  await conn.sendMessage(m.chat, { text, ...rcanal }, { quoted: m });
 };
 
 handler.command = ['estado', 's'];
