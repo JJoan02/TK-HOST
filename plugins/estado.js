@@ -165,19 +165,19 @@ ${randomResponse}
 > https://dash.tk-joanhost.com/home
 `.trim();
 
-  // Opciones de rcanal
-  const rcanal = {
+  // Primer rcanal
+  const rcanal1 = {
     contextInfo: {
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: "120363205895430548@newsletter", "120363233459118973@newsletter",
+        newsletterJid: "120363233459118973@newsletter",
         serverMessageId: 100,
         newsletterName: 'Tk-Host Channel',
       },
       externalAdReply: {
         showAdAttribution: true,
         title: 'Estado del Servicio',
-        body: 'TK-HOST | Tu aliado digital',
+        body: 'Memes TK | Canal personal de Joan TK',
         mediaUrl: null,
         description: null,
         previewType: "PHOTO",
@@ -189,8 +189,36 @@ ${randomResponse}
     },
   };
 
-  // Enviar el mensaje con rcanal
-  await conn.sendMessage(m.chat, { text, ...rcanal }, { quoted: m });
+  // Segundo rcanal
+  const rcanal2 = {
+    contextInfo: {
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: "120363205895430548@newsletter",
+        serverMessageId: 200,
+        newsletterName: 'Otro Canal',
+      },
+      externalAdReply: {
+        showAdAttribution: true,
+        title: 'Estado del Servicio',
+        body: 'TK-HOST | Tu socio confiable',
+        mediaUrl: null,
+        description: 'Descubre más sobre TK-HOST',
+        previewType: "VIDEO",
+        thumbnailUrl: randomImageUrl, // Imagen seleccionada aleatoriamente
+        sourceUrl: 'https://dash.tk-joanhost.com/home',
+        mediaType: 2,
+        renderLargerThumbnail: true,
+      },
+    },
+  };
+
+  // Selección aleatoria de rcanal
+  const rcanals = [rcanal1, rcanal2];
+  const randomRCanal = rcanals[Math.floor(Math.random() * rcanals.length)];
+
+  // Enviar el mensaje con rcanal aleatorio
+  await conn.sendMessage(m.chat, { text, ...randomRCanal }, { quoted: m });
 };
 
 handler.command = ['estado', 's'];
