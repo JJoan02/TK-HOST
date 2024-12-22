@@ -258,8 +258,7 @@ await conn.sendFile(m.chat, randomImageUrl, 'estado.jpg', text, m, rcanal);
 };
 
 // Comandos para este handler
-handler.command = ['estado', 's'];
+handler.command = ['estado'];
 handler.tags = ['estado'];
-handler.help = ['estado', 's'];
-
+handler.help = ['estado'];
 export default handler;
