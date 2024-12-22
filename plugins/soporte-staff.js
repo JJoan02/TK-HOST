@@ -43,8 +43,8 @@ ${listAdmin}
 ✨ ¡Tu éxito es nuestra prioridad! 💪
   `.trim();
 
-  // Enviar la imagen junto con el mensaje utilizando rcanal
-  await conn.sendAi(m.chat, titulowm2, titu, text, imageUrl, imageUrl, canal, estilo);
+  // Enviar la imagen junto con el mensaje
+  await conn.sendFile(m.chat, imageUrl, 'soporte.jpg', text, m);
 };
 
 handler.command = /^(staff|adminslist)$/i; // Comandos activadores
@@ -52,3 +52,4 @@ handler.tags = ['soporte', 'admins'];
 handler.help = ['staff', 'adminslist'];
 handler.group = true; // Solo en grupos
 export default handler;
+
