@@ -9,6 +9,16 @@ let imagenes = ["https://i.ibb.co/f9kvM3S/file.jpg",
 
 let icono = imagenes[Math.floor(Math.random() * imagenes.length)]
 
+//Enlaces
+var canal =   'https://whatsapp.com/channel/0029Vakpp8h1Hsq5Y5kbF33t'
+var git = 'https://github.com/WillZek'  
+var github = 'https://github.com/WillZek/CrowBot-ST' 
+var facebook = 'https://www.facebook.com/profile.php?id=100055985748040' 
+let tiktok = 'https://tiktok.com/@the_crow_legendario_bs'
+let correo = 'sm.ninopina10@gmail.com'
+
+global.redes = [canal, git, github, facebook, tiktok, correo].getRandom()
+
 global.rcanal = {
  contextInfo: {
              isForwarded: true,
