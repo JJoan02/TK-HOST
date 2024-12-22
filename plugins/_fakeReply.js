@@ -14,7 +14,7 @@ var canal =   'https://whatsapp.com/channel/0029VaS4zeE72WTyg5et571r'
 var git = 'https://github.com/JJoan02'  
 var github = 'https://github.com/JJoan02/TK-HOST'  
 let tiktok = 'https://www.tiktok.com/@joan_tk02'
-let correo = 'sm.ninopina10@gmail.com'
+let correo = 'sm.joanbottk@gmail.com'
 
 global.redes = [canal, git, github, tiktok, correo].getRandom()
 
