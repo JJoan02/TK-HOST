@@ -243,7 +243,13 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       chat.onlyLatinos = isEnable
       break
 
-case 'autoaceptar': case 'aceptarnuevos':
+    case 'autoaceptar': case 'aceptarnuevos':
+      if (m.isGroup && !(isAdmin || isOwner)) {
+        return conn.reply(m.chat, '❌ Solo administradores pueden cambiar esta configuración.', m)
+      }
+      chat.autoaceptar = isEnable
+      break    
+
 if (!m.isGroup) {
 if (!isOwner) {
 global.dfail('group', m, conn)
