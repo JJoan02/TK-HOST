@@ -15,8 +15,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   // Lista de opciones de configuración con descripción
   const opciones = [
     { name: 'welcome', description: 'Activa o desactiva la bienvenida en el grupo.' },
-    { name: 'antibots', description:
-'Activa o descativa el antibots en el grupo.' },
+    { name: 'antibots', description: 'Activa o descativa el antibots en el grupo.' },
     { name: 'restrict', description: 'Restringe comandos específicos solo a administradores.' },
     { name: 'antiTiktok', description: 'Bloquea enlaces de TikTok en el grupo.' },
     { name: 'antiYoutube', description: 'Bloquea enlaces de YouTube en el grupo.' },
@@ -63,6 +62,9 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       switch (opt.name.toLowerCase()) {
         case 'welcome':
           estado = chat.bienvenida ? '✅' : '❌'
+          break
+        case 'antibots':
+          estado = chat.antibots ? '✅' : '❌' // Asegúrate de usar ❌ o ✖️, pero sé consistente
           break
         case 'restrict':
           // Muestra el estado actual de `restrict` a nivel global
@@ -117,9 +119,6 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
         case 'antilink':
           estado = chat.antiLink ? '✅' : '❌'
           break
-        case 'antibots':
-          estado = chat.antibots ? '✅' : '✖️'
-          break
         case 'autoread':
           estado = global.opts?.autoread ? '✅' : '❌'
           break
@@ -133,6 +132,14 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 
   // Estructura switch para manejar la lógica de activación/desactivación de cada opción
   switch (type) {
+    case 'antibots':
+      // Ajusta permisos según tu preferencia (aquí solo admin u owner)
+      if (m.isGroup && !(isAdmin || isOwner)) {
+        return conn.reply(m.chat, '❌ Solo administradores o el owner pueden cambiar esta configuración.', m)
+      }
+      chat.antibots = isEnable
+      break
+
     case 'restrict':
       // Se aplica a nivel GLOBAL
       isAll = true
@@ -289,7 +296,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
           m.chat,
           `🤖 *Opciones disponibles:*\n\n${generarMenu()}\n` +
             `📌 Usa *${usedPrefix}on <opción>* para activar o *${usedPrefix}off <opción>* para desactivar.\n` +
-            `📌 Ejemplo: *${usedPrefix}on restrict*`,
+            `📌 Ejemplo: *${usedPrefix}on antibots*`,
           m
         )
       }
@@ -319,4 +326,5 @@ handler.tags = ['settings']
 handler.command = /^(enable|disable|on|off|1|0)$/i
 
 export default handler
+
 
