@@ -110,6 +110,8 @@ export async function handler(chatUpdate) {
                     chat.onlyLatinos = true
                 if (!('nsfw' in chat))
                     chat.nsfw = true
+                if (!('antibots' in chat))
+                    chat.antibots = true // <-- ACTIVADO POR DEFECTO
                 if (!isNumber(chat.expired))
                     chat.expired = 0
             } else
@@ -130,6 +132,7 @@ export async function handler(chatUpdate) {
                     antispam: true,
                     onlyLatinos: true,
                     nsfw: true, 
+                    antibots: true,
                     expired: 0, 
                 }
 
