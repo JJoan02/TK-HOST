@@ -15,6 +15,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   // Lista de opciones de configuración con descripción
   const opciones = [
     { name: 'welcome', description: 'Activa o desactiva la bienvenida en el grupo.' },
+    { name: 'antibots', description:
+'Activa o descativa el antibots en el grupo.' },
     { name: 'restrict', description: 'Restringe comandos específicos solo a administradores.' },
     { name: 'antiTiktok', description: 'Bloquea enlaces de TikTok en el grupo.' },
     { name: 'antiYoutube', description: 'Bloquea enlaces de YouTube en el grupo.' },
@@ -114,6 +116,9 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
           break
         case 'antilink':
           estado = chat.antiLink ? '✅' : '❌'
+          break
+        case 'antibots':
+          estado = chat.antibots ? '✅' : '✖️'
           break
         case 'autoread':
           estado = global.opts?.autoread ? '✅' : '❌'
