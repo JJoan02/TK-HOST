@@ -14,7 +14,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
     { name: 'restrict', description: 'Restringe comandos específicos solo a administradores.' },
     { name: 'antiTiktok', description: 'Bloquea enlaces de TikTok en el grupo.' },
     { name: 'antiYoutube', description: 'Bloquea enlaces de YouTube en el grupo.' },
-{ name: 'autoaceptar', description: 'Acepta A Los Miembros Del Grupo' },
+    { name: 'autoaceptar', description: 'Acepta A Los Miembros Del Grupo' },
     { name: 'antiTelegram', description: 'Bloquea enlaces de Telegram en el grupo.' },
     { name: 'antiFacebook', description: 'Bloquea enlaces de Facebook en el grupo.' },
     { name: 'antiInstagram', description: 'Bloquea enlaces de Instagram en el grupo.' },
@@ -52,7 +52,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
         case 'antitiktok':
           estado = chat.antiTiktok ? '✅' : '❌'
           break
- estado = chat.autoaceptar ? '✅' : '❌'
+        case 'autoaceptar':
+          estado = chat.autoaceptar ? '✅' : '❌'
           break
         case 'antiyoutube':
           estado = chat.antiYoutube ? '✅' : '❌'
