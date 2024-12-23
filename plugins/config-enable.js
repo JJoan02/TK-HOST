@@ -133,6 +133,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   // Estructura switch para manejar la lógica de activación/desactivación de cada opción
   switch (type) {
     case 'antibots':
+    case 'antibot':  
       // Ajusta permisos según tu preferencia (aquí solo admin u owner)
       if (m.isGroup && !(isAdmin || isOwner)) {
         return conn.reply(m.chat, '❌ Solo administradores o el owner pueden cambiar esta configuración.', m)
@@ -267,6 +268,7 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       break
 
     case 'nsfw':
+    case '+18':  
       if (m.isGroup && !(isAdmin || isOwner)) {
         return conn.reply(m.chat, '❌ Solo administradores o el owner pueden cambiar esta configuración.', m)
       }
