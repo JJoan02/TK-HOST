@@ -1,46 +1,49 @@
-import { areJidsSameUser } from '@whiskeysockets/baileys';
-
-export async function before(m, { participants, conn }) {
-  if (!m.isGroup) return; // Solo se ejecuta en grupos
-
-  let chat = global.db.data.chats[m.chat];
-  if (!chat.antiBot) return; // Verificar si el modo anti-bot está activado
-
-  const botJid = global.conn.user.jid; // JID del bot principal
-  const allowedBots = []; // Lista de bots permitidos en el grupo (en caso de ser necesario)
-
-  // Revisión de participantes
-  for (let participant of participants) {
-    // Ignorar administradores y superadministradores humanos
-    if (participant.isAdmin || participant.isSuperAdmin) continue;
-
-    // Detectar si el participante es un bot (JIDs que contienen ":")
-    if (participant.id !== botJid && participant.id.includes(':')) {
-      // Evitar eliminar bots en la lista blanca
-      if (allowedBots.includes(participant.id)) continue;
-
-      try {
-        // Intentar eliminar al bot detectado
-        await conn.groupParticipantsUpdate(m.chat, [participant.id], 'remove');
-        console.log(`✅ Bot eliminado exitosamente: ${participant.id}`);
-
-        // Notificar al grupo sobre la acción
-        await conn.sendMessage(
-          m.chat,
-          `🚫 *Anti-Bot Activado*: Se eliminó al bot ${participant.id} del grupo.`,
-          { mentions: [participant.id] }
-        );
-      } catch (error) {
-        // Manejo de errores en la eliminación
-        console.error(`❌ Error al intentar eliminar al bot ${participant.id}:`, error);
-
-        // Notificación al grupo en caso de error
-        await conn.sendMessage(
-          m.chat,
-          `⚠️ *Error*: No se pudo eliminar al bot ${participant.id}. Verifica los permisos del bot.`,
-          null
-        );
-      }
+let handler = async (m, { conn, args, usedPrefix, command }) => {
+    let chat = global.db.data.chats[m.chat] || {};
+    if (args[0] === 'on') {
+        if (chat.antiBot) return conn.reply(m.chat, '🚩 AntiBot ya está activado.', m);
+        chat.antiBot = true;
+        await conn.reply(m.chat, '🚩 AntiBot activado para este grupo.', m);
+    } else if (args[0] === 'off') {
+        if (!chat.antiBot) return conn.reply(m.chat, '🚩 AntiBot ya está desactivado.', m);
+        chat.antiBot = false;
+        await conn.reply(m.chat, '🚩 AntiBot desactivado para este grupo.', m);
+    } else {
+        await conn.reply(m.chat, `*Configurar AntiBot*. Escriba "on" para activar y "off" para desactivar.`, m);
     }
-  }
-}
+};
+
+// Función para detectar y eliminar bots
+conn.on('group-participants-update', async (update) => {
+    const { id, participants, action } = update;
+
+    // Solo ejecutar si AntiBot está activado
+    let chat = global.db.data.chats[id] || {};
+    if (!chat.antiBot) return;
+
+    if (action === 'add') {
+        for (let participant of participants) {
+            let user = await conn.getContact(participant);
+
+            // Excepciones: owner y el propio bot
+            if (participant === conn.user.jid || global.owner.includes(participant)) continue;
+
+            // Lógica para detectar bots (puedes personalizarla)
+            let isBot = /bot|robot/i.test(user.notify || user.name || '') || 
+                        participant.endsWith('@g.us');
+
+            if (isBot) {
+                await conn.groupParticipantsUpdate(id, [participant], 'remove'); // Elimina al bot
+                await conn.reply(id, `🤖 Bot detectado y eliminado: ${user.notify || participant}`, null);
+            }
+        }
+    }
+});
+
+handler.help = ['antibot *<on/off>*'];
+handler.tags = ['group'];
+handler.command = ['antibot'];
+handler.group = true;
+handler.admin = true;
+
+export default handler;
