@@ -1,5 +1,6 @@
 let handler = async (m, { conn, participants, groupMetadata, args }) => {
   const imageUrl = 'https://pomf2.lain.la/f/9a79fsqu.jpg'; // Cambia por la URL de la imagen adecuada
+  const fallbackImage = './ruta/local/de/imagen.jpg'; // Ruta de imagen local como respaldo
 
   // Obtener los administradores del grupo
   const groupAdmins = participants.filter(p => p.admin);
@@ -37,14 +38,26 @@ ${listAdmin}
 
 📩 Email: joanbottk@gmail.com  
 📞 WhatsApp: +51 910 234 457  
-🌐 Pagina Oficial
+🌐 Pagina Oficial  
 > https://dash.tk-joanhost.com/home
 
 ✨ ¡Tu éxito es nuestra prioridad! 💪
   `.trim();
 
-  // Enviar la imagen junto con el mensaje
-  await conn.sendFile(m.chat, imageUrl, 'soporte.jpg', text, m);
+  try {
+    // Intentar enviar la imagen desde la URL
+    await conn.sendFile(m.chat, imageUrl, 'soporte.jpg', text, m);
+  } catch (err) {
+    console.error('Error al enviar la imagen desde la URL:', err.message);
+    m.reply('No se pudo cargar la imagen desde la URL. Enviando imagen de respaldo...');
+    try {
+      // Usar la imagen local como respaldo
+      await conn.sendFile(m.chat, fallbackImage, 'soporte.jpg', text, m);
+    } catch (fallbackErr) {
+      console.error('Error al enviar la imagen de respaldo:', fallbackErr.message);
+      m.reply('No se pudo cargar ninguna imagen. Por favor, contacta al soporte.');
+    }
+  }
 };
 
 handler.command = /^(staff|adminslist)$/i; // Comandos activadores
@@ -52,4 +65,3 @@ handler.tags = ['soporte', 'admins'];
 handler.help = ['staff', 'adminslist'];
 handler.group = true; // Solo en grupos
 export default handler;
-
