@@ -1,6 +1,6 @@
 let handler = async (m, { conn, participants, groupMetadata, args }) => {
   const imageUrl = 'https://pomf2.lain.la/f/9a79fsqu.jpg'; // Cambia por la URL de la imagen adecuada
-  const fallbackImage = './ruta/local/de/imagen.jpg'; // Ruta de imagen local como respaldo
+  const fallbackImage = './staff.jpg'; // Ruta de imagen local como respaldo
 
   // Obtener los administradores del grupo
   const groupAdmins = participants.filter(p => p.admin);
